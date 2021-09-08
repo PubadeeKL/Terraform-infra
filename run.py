@@ -3,8 +3,8 @@ import fileinput
 
 STAGE = ["develop","uat","pord"]
 
-BRANCH = os.environ.get('BITBUCKET_BRANCH')
-REPO_NAME= os.environ.get('BITBUCKET_REPO_SLUG')
+BRANCH = os.environ.get('GIT_BRANCH')
+REPO_NAME= os.environ.get('GIT_REPO_SLUG')
 
 
 def terraform_remote_state():

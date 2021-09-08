@@ -1,0 +1,93 @@
+name: 'Terraform'
+
+env:
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY}}
+  
+on:
+  push:
+    branches:
+    - feature/**
+    - develop
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: develop
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+     
+    - name: Set output Branch name
+      id: vars
+      shell: bash
+      run: |
+        echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+    
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
+      # with:
+        # cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+
+    - name: Setup Terraform remote
+      working-directory: ./remote-state
+      if: ${{ steps.vars.outputs.brach == 'develop' || steps.vars.outputs.brach == 'uat' || steps.vars.outputs.brach == 'prod'   }} 
+      env:
+        TF_VAR_GIT_REPO_NAME: ${{ github.event.repository.name }}
+        TF_VAR_GIT_BRANCH: ${{ steps.vars.outputs.brach }} 
+        GIT_BRANCH: ${{ steps.vars.outputs.brach }}
+      run: |
+        terraform init
+        terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
+        ../script/setbackend.sh
+     
+    - name: Setup Terraform remote test feature
+      working-directory: ./remote-state
+      id: remote_state
+      if: contains(${{ steps.vars.output.branch }},'feature') 
+      env:
+        TF_VAR_GIT_REPO_NAME: ${{ github.event.repository.name }}
+        TF_VAR_GIT_BRANCH: develop
+        GIT_BRANCH: develop 
+      run: |
+        terraform init
+        terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
+        chmod +x "../script/setbackend.sh"
+        ../script/setbackend.sh 
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform plan for test feature branch
+      if: contains(${{ steps.vars.output.branch }},'feature') 
+      working-directory: ./develop
+      run: |
+       terraform init 
+       terraform plan
+       
+    - name: Terraform Init
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+      working-directory: ./${{ steps.vars.output.branch }}
+      run: terraform init
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+      working-directory: ./${{ steps.vars.output.branch }}
+      run: terraform apply -auto-approve
+
+#   - name: Terraform plan
+#      if: contains(${{ steps.vars.output.branch }},'feature') 
+#      working-directory: ./${{ steps.vars.output.branch }}
+#      run: terraform plan 
+      

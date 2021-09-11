@@ -13,7 +13,7 @@ variable "PROJECT_NAME" {
 
 //Environment
 variable "ENV_NAME"{
-  default = "uat"
+  default = "master"
 }
 
 # AWS Region

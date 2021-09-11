@@ -13,32 +13,32 @@ pipelines:
         develop:
             - step:
                 script:
-                    - echo Check Terraform $BITBUCKET_BRANCH
-                    - export TF_VAR_BITBUCKET_REPO_NAME=$BITBUCKET_REPO_SLUG
-                    - export TF_VAR_BITBUCKET_BRANCH=$BITBUCKET_BRANCH
+                    - echo Check Terraform $GIT_BRANCH
+                    - export TF_VAR_GIT_REPO_NAME=$GIT_REPO_SLUG
+                    - export TF_VAR_GIT_BRANCH=$GIT_BRANCH
                     - cd remote-state
                     - terraform init 
                     - terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
                     - . ../script/setbackend.sh 
                     # - terraform destroy -auto-approve
                     # - terraform validate
-                    - cd ../$BITBUCKET_BRANCH
+                    - cd ../$GIT_BRANCH
                     - terraform init
                     - terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars'
                     # - terraform destroy -auto-approve
         uat:
             - step:
                 script:
-                    - echo Check Terraform $BITBUCKET_BRANCH
-                    - export TF_VAR_BITBUCKET_REPO_NAME=$BITBUCKET_REPO_SLUG
-                    - export TF_VAR_BITBUCKET_BRANCH=$BITBUCKET_BRANCH
+                    - echo Check Terraform $GIT_BRANCH
+                    - export TF_VAR_GIT_REPO_NAME=$GIT_REPO_SLUG
+                    - export TF_VAR_GIT_BRANCH=$GIT_BRANCH
                     - cd remote-state
                     - terraform init 
                     - terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
                     - . ../script/setbackend.sh 
                     # - terraform destroy -auto-approve
                     # - terraform validate
-                    - cd ../$BITBUCKET_BRANCH
+                    - cd ../$GIT_BRANCH
                     - terraform init
                     - terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars'
                     # - terraform destroy -auto-approve

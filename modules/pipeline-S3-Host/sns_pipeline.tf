@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "sns_topic_policy" {
 }
 
 resource "aws_codestarnotifications_notification_rule" "noti_pipeline"{
-   name = "intern-devops"
+   name = "${lower(var.ENV)}-${lower(var.PROJECT_NAME)}" 
    resource = aws_codepipeline.codepipeline.arn
    detail_type    = "BASIC"
    event_type_ids = [

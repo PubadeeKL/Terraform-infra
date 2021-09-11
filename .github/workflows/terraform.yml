@@ -7,11 +7,20 @@ env:
 on:
   push:
     branches:
+<<<<<<< HEAD
     - feature/**
   pull_request:
     - develop
     - uat
     - prod
+=======
+      - feature/**
+  pull_request:
+    branches: 
+      - develop
+      - uat
+      - prod
+>>>>>>> feature/github_action
     
 
 jobs:

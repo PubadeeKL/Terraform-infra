@@ -12,10 +12,10 @@ on:
       - uat
       - prod
   pull_request:
-    branches: 
-      - develop
-      - uat
-      - prod
+    # branches: 
+    #   # - develop
+    #   # - uat
+    #   # - prod
     
 
 jobs:
@@ -51,7 +51,7 @@ jobs:
 
     - name: Setup Terraform remote
       working-directory: ./remote-state
-      if: ${{ steps.vars.outputs.brach == 'develop' || steps.vars.outputs.brach == 'uat' || steps.vars.outputs.brach == 'prod'   }} 
+      if: contains(github.ref,'develop') || contains(github.ref,'uat') || contains(github.ref,'main')    
       env:
         TF_VAR_GIT_REPO_NAME: ${{ github.event.repository.name }}
         TF_VAR_GIT_BRANCH: ${{ steps.vars.outputs.brach }} 
@@ -59,12 +59,13 @@ jobs:
       run: |
         terraform init
         terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
+        chmod +x "../script/setbackend.sh"
         ../script/setbackend.sh
      
     - name: Setup Terraform remote test feature
       working-directory: ./remote-state
       id: remote_state
-      if: contains(${{ steps.vars.output.branch }},'feature') 
+      if: contains(github.ref,'feature') 
       env:
         TF_VAR_GIT_REPO_NAME: ${{ github.event.repository.name }}
         TF_VAR_GIT_BRANCH: develop
@@ -78,7 +79,7 @@ jobs:
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform plan for test feature branch
       working-directory: ./develop
-      if: contains(${{ steps.vars.output.branch }},'feature') 
+      if: contains(github.ref,'feature') 
       run: |
        terraform init 
        terraform plan
@@ -90,6 +91,8 @@ jobs:
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+      env:
+        GIT_BRANCH: ${{ steps.vars.outputs.brach }}
       working-directory: ./${{ steps.vars.output.branch }}
       run: |
         echo ${{ steps.vars.output.branch }}

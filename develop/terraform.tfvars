@@ -7,7 +7,7 @@ REPO_ID="poom9091/React-Boilerplate"
 BRANCH_NAME="master"
 
 ## Project_Name
-# PROJECT_NAME=""
+PROJECT_NAME="github-action"
 # ENV_NAME=""
 
 

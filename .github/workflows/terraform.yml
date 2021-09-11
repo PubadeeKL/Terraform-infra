@@ -13,7 +13,7 @@ on:
       - prod
   pull_request:
     types: 
-      - opened
+      - review_requested
       - edited
     # branches: 
     #   # - develop
@@ -87,17 +87,17 @@ jobs:
        terraform plan
        
     - name: Terraform Init
-      working-directory: ./${{ steps.vars.output.branch }}
+      working-directory: ./${{ steps.vars.outputs.branch }}
       if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       run: terraform init
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       env:
-        GIT_BRANCH: ${{ steps.vars.outputs.brach }}
-      working-directory: ./${{ steps.vars.output.branch }}
+        GIT_BRANCH: ${{ steps.vars.outputs.branch }}
+      working-directory: ./${{ steps.vars.outputs.branch }}
       run: |
-        echo ${{ steps.vars.output.branch }}
+        echo ${{ steps.vars.outputs.branch }}
         terraform apply -auto-approve
 
 #   - name: Terraform plan

@@ -3,7 +3,7 @@ provider "aws"{
 }
 
 resource "aws_dynamodb_table" "terraform_lock" {
-    name           = local.DynamoDB_REMOTE
+    name           = lower(local.DynamoDB_REMOTE)
     read_capacity  = 5
     write_capacity = 5
     hash_key       = "LockID"
@@ -17,7 +17,7 @@ resource "aws_dynamodb_table" "terraform_lock" {
 }
 
 resource "aws_s3_bucket" "bucket_backend" {
-    bucket = local.S3_REMOTE
+    bucket = lower(local.S3_REMOTE)
     versioning {
         enabled = true
     }

@@ -8,7 +8,7 @@ variable "SLACK_WORKSPACE" {
 
 // Project name
 variable "PROJECT_NAME" {
-  default = "test"
+  default = "github-action"
 }
 
 //Environment

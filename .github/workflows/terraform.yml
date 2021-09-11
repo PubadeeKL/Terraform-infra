@@ -12,10 +12,10 @@ on:
       - uat
       - prod
   pull_request:
-    branches: 
-      - develop
-      - uat
-      - prod
+    # branches: 
+    #   # - develop
+    #   # - uat
+    #   # - prod
     
 
 jobs:
@@ -59,6 +59,7 @@ jobs:
       run: |
         terraform init
         terraform apply -input=false -auto-approve -var-file='../settingaws.tfvars' || true
+        chmod +x "../script/setbackend.sh"
         ../script/setbackend.sh
      
     - name: Setup Terraform remote test feature

@@ -8,6 +8,9 @@ on:
   push:
     branches:
       - feature/**
+      - develop
+      - uat
+      - prod
   pull_request:
     branches: 
       - develop
@@ -81,12 +84,12 @@ jobs:
        terraform plan
        
     - name: Terraform Init
-      if: github.ref == 'refs/heads/develop' && github.event_name == 'pull_request'
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       working-directory: ./${{ steps.vars.output.branch }}
       run: terraform init
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/develop' && github.event_name == 'pull_request'
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       working-directory: ./${{ steps.vars.output.branch }}
       run: terraform apply -auto-approve
 

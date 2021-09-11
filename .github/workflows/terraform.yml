@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform-gitops'
 
 env:
   AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
@@ -77,21 +77,23 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform plan for test feature branch
-      if: contains(${{ steps.vars.output.branch }},'feature') 
       working-directory: ./develop
+      if: contains(${{ steps.vars.output.branch }},'feature') 
       run: |
        terraform init 
        terraform plan
        
     - name: Terraform Init
-      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       working-directory: ./${{ steps.vars.output.branch }}
+      if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       run: terraform init
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
       working-directory: ./${{ steps.vars.output.branch }}
-      run: terraform apply -auto-approve
+      run: |
+        echo ${{ steps.vars.output.branch }}
+        terraform apply -auto-approve
 
 #   - name: Terraform plan
 #      if: contains(${{ steps.vars.output.branch }},'feature') 

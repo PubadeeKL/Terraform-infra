@@ -4,7 +4,7 @@ resource "aws_sns_topic_policy" "topic_policy"{
 }
 
 resource  "aws_sns_topic" "codepipeline" {
-  name = "codepipeline-dev"
+  name = "${var.CODEPIPELINE_NAME}-codepipeline"
 }
 
 data "aws_iam_policy_document" "sns_topic_policy" {

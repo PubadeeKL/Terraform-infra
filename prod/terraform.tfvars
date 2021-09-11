@@ -6,6 +6,7 @@ SLACK_CHANNEL="C02BM39UNRX"
 BRANCH_NAME="prod"
 
 ## Project_Name
+PROJECT_NAME="github-action"
 # PROJECT_NAME=""
 # ENV_NAME=""
 

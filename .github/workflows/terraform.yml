@@ -99,10 +99,11 @@ jobs:
     - name: Terraform Apply
       if: (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/uat' ) && github.event_name == 'push'
       env:
-        GIT_BRANCH: ${{ steps.vars.outputs.branch }}
+        GIT_BRANCH: ${{ steps.vars.outputs.branch }}:w
       working-directory: ./${{ steps.vars.outputs.branch }}
       run: |
         echo ${{ steps.vars.outputs.branch }}
+        terraform validate
         terraform apply -auto-approve
 
 

@@ -4,6 +4,7 @@ name: 'Terraform-gitops'
 env:
   AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY}}
+  TERRAFORM_DESTORY: ${{ secrets.TERRAFORM_DESTORY}}
   
 on:
   push:
@@ -99,12 +100,20 @@ jobs:
     - name: Terraform Apply
       if: (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/uat' ) && github.event_name == 'push'
       env:
-        GIT_BRANCH: ${{ steps.vars.outputs.branch }}:w
+        GIT_BRANCH: ${{ steps.vars.outputs.branch }}
       working-directory: ./${{ steps.vars.outputs.branch }}
       run: |
         echo ${{ steps.vars.outputs.branch }}
         terraform validate
         terraform apply -auto-approve -var-file='../settingaws.tfvars'
+
+    - name: Terraform Destroy
+      if : (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/uat' ) && github.event_name == 'push' && ( env.TERRAFORM_DESTORY == true )
+      env:
+        GIT_BRANCH: ${{ steps.vars.outputs.branch }}
+      working-directory: ./${{ steps.vars.outputs.branch }}
+      run: terraform destroy -auto-approve
+
 
 
 #   - name: Terraform plan

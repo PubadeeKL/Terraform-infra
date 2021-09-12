@@ -6,7 +6,6 @@ env:
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY}}
   TERRAFORM_DESTORY: true
 
-  
 on:
   push:
     branches:
@@ -99,7 +98,7 @@ jobs:
       run: terraform init
 
     - name: Terraform Apply
-      if: (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/uat' ) && github.event_name == 'push' &&  env.TERRAFORM_DESTORY  
+      if: (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/uat' ) && github.event_name == 'push' &&  ( env.TERRAFORM_DESTORY == false ) 
       env:
         GIT_BRANCH: ${{ steps.vars.outputs.branch }}
       working-directory: ./${{ steps.vars.outputs.branch }}

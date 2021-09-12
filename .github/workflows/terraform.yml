@@ -4,7 +4,7 @@ name: 'Terraform-gitops'
 env:
   AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
   AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY}}
-  TERRAFORM_DESTORY: true
+  TERRAFORM_DESTORY: false
 
 on:
   push:

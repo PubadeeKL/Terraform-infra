@@ -1,10 +1,10 @@
+resource  "aws_sns_topic" "codepipeline" {
+  name = "${var.CODEPIPELINE_NAME}-codepipeline"
+}
+
 resource "aws_sns_topic_policy" "topic_policy"{
     arn = aws_sns_topic.codepipeline.arn
     policy = data.aws_iam_policy_document.sns_topic_policy.json
-}
-
-resource  "aws_sns_topic" "codepipeline" {
-  name = "${var.CODEPIPELINE_NAME}-codepipeline"
 }
 
 data "aws_iam_policy_document" "sns_topic_policy" {

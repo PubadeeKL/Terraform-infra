@@ -104,7 +104,7 @@ jobs:
       run: |
         echo ${{ steps.vars.outputs.branch }}
         terraform validate
-        terraform apply -auto-approve
+        terraform apply -auto-approve -var-file='../settingaws.tfvars'
 
 
 #   - name: Terraform plan

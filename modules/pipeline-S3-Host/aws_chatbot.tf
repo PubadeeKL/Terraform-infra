@@ -2,6 +2,7 @@ module "chatbot_slack_configuration" {
   source  = "waveaccounting/chatbot-slack-configuration/aws"
   version = "1.0.0"
 
+
   configuration_name = "awschatbot-${var.CODEPIPELINE_NAME}"
   iam_role_arn       = aws_iam_role.awschatbot_role.arn
   slack_channel_id   = var.SLACK_CHANNEL_ID

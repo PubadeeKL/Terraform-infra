@@ -8,7 +8,7 @@ variable "SLACK_WORKSPACE" {}
 variable "AWS_REGION"{
     default = "eu-west-1"
 }
-variable "ENV" {
+
+variable "SNS_LIST" {
   type = list(string)
-  default = ["develop"]
 }
